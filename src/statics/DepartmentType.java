@@ -1,6 +1,6 @@
 package statics;
 
-public enum Department {
+public enum DepartmentType {
     INFORMATION_TECHNOLOGY("Công nghệ thông tin"),
     ACCOUNTING("Kế toán"),
     OPERATION("Khối sản xuất"),
@@ -9,9 +9,9 @@ public enum Department {
     SUPPORT("Phòng hậu cần"),
     HR("Phòng hành chính");
 
-    public final String departmentType;
+    public final String name;
 
-    Department(String departmentType) {
-        this.departmentType = departmentType;
+    DepartmentType(String name) {
+        this.name = name;
     }
 }

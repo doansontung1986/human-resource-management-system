@@ -1,20 +1,18 @@
 package entity;
 
-import logic.AdminLogic;
+import logic.AccountManagement;
 
 public class Admin extends Person {
     public static int AUTO_ID;
 
     public Admin() {
-        if (AdminLogic.getInstance().loadAutoIdFromFile() != null) {
-            AUTO_ID = AdminLogic.getInstance().loadAutoIdFromFile();
-        }
+        AUTO_ID = AccountManagement.getInstance().getAccountList().size();
 
         if (AUTO_ID < 1000) {
             AUTO_ID = 1000;
         }
 
-        this.id = "AD" + AUTO_ID;
+        this.id = AUTO_ID;
         AUTO_ID++;
     }
 }

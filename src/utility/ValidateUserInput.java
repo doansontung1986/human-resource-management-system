@@ -14,7 +14,7 @@ public class ValidateUserInput {
     }
 
     public static boolean checkValidAddress(String address) {
-        return address.matches("^[a-zA-Z0-9!@#$%^&*\\s]{6,35}$");
+        return address.matches("^[a-zA-Z0-9!@#$%^&*,.\\s]{6,35}$");
     }
 
     public static boolean checkValidIdentityId(String identityId) {

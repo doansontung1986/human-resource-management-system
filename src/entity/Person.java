@@ -1,27 +1,26 @@
 package entity;
 
-import statics.Department;
+import statics.DepartmentType;
 import statics.Role;
 import utility.ScannerUtility;
-import utility.ValidateUserInput;
 
 import java.io.Serializable;
 
 public abstract class Person implements Inputable, Displayable, Serializable {
     private static final long serialVersionUID = -6500665823330706018L;
-    protected String id;
+    protected int id;
     protected String name;
     protected String address;
     protected String phoneNumber;
     protected String citizenIdentifyId;
     protected Account account;
-    protected Department department;
+    protected DepartmentType departmentType;
 
     public Person() {
         this.account = new Account();
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -65,34 +64,31 @@ public abstract class Person implements Inputable, Displayable, Serializable {
         this.account = account;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public DepartmentType getDepartment() {
+        return departmentType;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
+    public void setDepartment(DepartmentType departmentType) {
+        this.departmentType = departmentType;
     }
 
     @Override
     public void inputInfo() {
         System.out.println("Nhập họ tên: ");
-        this.setName(inputValidName());
+        this.setName(ScannerUtility.inputValidName());
         System.out.println("Nhập số căn cước công dân hoặc số chứng minh nhân dân: ");
-        this.setCitizenIdentifyId(inputValidIdentityId());
+        this.setCitizenIdentifyId(ScannerUtility.inputValidIdentityId());
         System.out.println("Nhập số điện thoại: ");
-        this.setPhoneNumber(inputValidPhoneNumber());
+        this.setPhoneNumber(ScannerUtility.inputValidPhoneNumber());
         System.out.println("Nhập địa chỉ: ");
-        this.setAddress(inputValidAddress());
+        this.setAddress(ScannerUtility.inputValidAddress());
+
         this.account.inputInfo();
 
         if (account.getRole().equals(Role.ADMIN)) {
-            this.department = Department.INFORMATION_TECHNOLOGY;
+            this.departmentType = DepartmentType.INFORMATION_TECHNOLOGY;
         } else if (account.getRole().equals(Role.HRAGENT)) {
-            this.department = Department.HR;
+            this.departmentType = DepartmentType.HR;
         } else {
             System.out.println("Nhập phòng ban với lựa chọn sau:");
             System.out.println("1. Công nghệ thông tin");
@@ -106,13 +102,13 @@ public abstract class Person implements Inputable, Displayable, Serializable {
             int departmentChoice = ScannerUtility.inputValidNumberInRange(1, 7);
 
             switch (departmentChoice) {
-                case 1 -> this.department = Department.INFORMATION_TECHNOLOGY;
-                case 2 -> this.department = Department.ACCOUNTING;
-                case 3 -> this.department = Department.OPERATION;
-                case 4 -> this.department = Department.SALE;
-                case 5 -> this.department = Department.MARKETING;
-                case 6 -> this.department = Department.SUPPORT;
-                case 7 -> this.department = Department.HR;
+                case 1 -> this.departmentType = DepartmentType.INFORMATION_TECHNOLOGY;
+                case 2 -> this.departmentType = DepartmentType.ACCOUNTING;
+                case 3 -> this.departmentType = DepartmentType.OPERATION;
+                case 4 -> this.departmentType = DepartmentType.SALE;
+                case 5 -> this.departmentType = DepartmentType.MARKETING;
+                case 6 -> this.departmentType = DepartmentType.SUPPORT;
+                case 7 -> this.departmentType = DepartmentType.HR;
                 default ->
                         throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
             }
@@ -122,69 +118,5 @@ public abstract class Person implements Inputable, Displayable, Serializable {
     @Override
     public void displayInfo() {
         System.out.printf("%-12s | %-21s | %-36s | %-36s | %-16s |\n", this.id, this.account.getUserName(), this.name, this.address, this.phoneNumber);
-    }
-
-    private String inputValidName() {
-        String name;
-        do {
-            name = ScannerUtility.inputStringInRange(6, 35);
-
-            if (ValidateUserInput.checkValidName(name)) {
-                break;
-            }
-
-            System.out.print("Tên nhân viên phải có độ dài 6 - 35 ký tự. Nhập lại tên nhân viên: ");
-        } while (true);
-
-        return name;
-    }
-
-    private String inputValidAddress() {
-        String address;
-        do {
-            address = ScannerUtility.inputStringInRange(6, 35);
-
-            if (ValidateUserInput.checkValidAddress(address)) {
-                break;
-            }
-
-            System.out.print("Địa chỉ phải có độ dài 6 - 35 ký tự. Nhập lại địa chỉ: ");
-        } while (true);
-
-        return address;
-    }
-
-    private String inputValidPhoneNumber() {
-        long phoneNumber;
-        String phoneNumberStr;
-        do {
-            phoneNumber = ScannerUtility.inputValidLongNumber();
-            phoneNumberStr = "0" + phoneNumber;
-
-            if (ValidateUserInput.checkValidPhoneNumber(phoneNumberStr)) {
-                break;
-            }
-
-            System.out.println("Số điện thoại phải có độ dài 10 hoặc 12 ký tự.");
-            System.out.println("Bắt đầu bằng số 0 và có các số là 9, 8, 1, 7, 3, 5 phía sau. Ví dụ: 0912345678");
-            System.out.println("Vui lòng nhập lại số điện thoại: ");
-        } while (true);
-
-        return phoneNumberStr;
-    }
-
-    public String inputValidIdentityId() {
-        long identityId;
-        do {
-            identityId = ScannerUtility.inputValidLongNumber();
-
-            if (ValidateUserInput.checkValidIdentityId(String.valueOf(identityId))) {
-                break;
-            }
-
-            System.out.println("Căn cước công dân hoặc CMND phải có độ dài 9 hoặc 12 ký tự. Vui lòng nhập lại: ");
-        } while (true);
-
-        return String.valueOf(identityId);
     }
 }

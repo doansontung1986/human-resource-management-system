@@ -12,6 +12,8 @@ public class Account implements Inputable, Serializable {
     private String password;
     private String repeatPassword;
     private Role role;
+    private boolean isLocked;
+    private int failedLoginAttempt;
 
     public Account() {
     }
@@ -33,7 +35,7 @@ public class Account implements Inputable, Serializable {
         return password;
     }
 
-    private void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
@@ -41,7 +43,7 @@ public class Account implements Inputable, Serializable {
         return repeatPassword;
     }
 
-    public void setRepeatPassword(String repeatPassword) {
+    private void setRepeatPassword(String repeatPassword) {
         this.repeatPassword = repeatPassword;
     }
 
@@ -51,6 +53,22 @@ public class Account implements Inputable, Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public int getFailedLoginAttempt() {
+        return failedLoginAttempt;
+    }
+
+    public void setFailedLoginAttempt(int failedLoginAttempt) {
+        this.failedLoginAttempt = failedLoginAttempt;
     }
 
     @Override
@@ -72,7 +90,7 @@ public class Account implements Inputable, Serializable {
     }
 
     public void displayAccountInfo() {
-        System.out.printf("%-21s | %-16s | %-16s |\n", this.userName, this.role, this.password);
+        System.out.printf("%-21s | %-16s | %-16s |\n", this.userName, this.role, this.isLocked);
     }
 
     private String inputValidUserName() {
