@@ -38,8 +38,9 @@ public class Department implements Inputable, Displayable, Serializable {
         System.out.println("5. Phòng marketing");
         System.out.println("6. Phòng hậu cần");
         System.out.println("7. Phòng hành chính");
+        System.out.println("8. Phòng nguồn nhân lực dự bị");
 
-        int departmentChoice = ScannerUtility.inputValidNumberInRange(1, 7);
+        int departmentChoice = ScannerUtility.inputValidNumberInRange(1, 8);
 
         switch (departmentChoice) {
             case 1 -> this.departmentType = DepartmentType.INFORMATION_TECHNOLOGY;
@@ -49,6 +50,21 @@ public class Department implements Inputable, Displayable, Serializable {
             case 5 -> this.departmentType = DepartmentType.MARKETING;
             case 6 -> this.departmentType = DepartmentType.SUPPORT;
             case 7 -> this.departmentType = DepartmentType.HR;
+            case 8 -> this.departmentType = DepartmentType.STAFF;
+            default -> throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
+        }
+    }
+
+    public void inputInfo(int departmentChoice) {
+        switch (departmentChoice) {
+            case 1 -> this.departmentType = DepartmentType.INFORMATION_TECHNOLOGY;
+            case 2 -> this.departmentType = DepartmentType.ACCOUNTING;
+            case 3 -> this.departmentType = DepartmentType.OPERATION;
+            case 4 -> this.departmentType = DepartmentType.SALE;
+            case 5 -> this.departmentType = DepartmentType.MARKETING;
+            case 6 -> this.departmentType = DepartmentType.SUPPORT;
+            case 7 -> this.departmentType = DepartmentType.HR;
+            case 8 -> this.departmentType = DepartmentType.STAFF;
             default -> throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
         }
     }

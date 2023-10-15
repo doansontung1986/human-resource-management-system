@@ -7,7 +7,8 @@ public enum DepartmentType {
     SALE("Phòng kinh doanh"),
     MARKETING("Phòng marketing"),
     SUPPORT("Phòng hậu cần"),
-    HR("Phòng hành chính");
+    HR("Phòng hành chính"),
+    STAFF("Phòng nguồn lực dự bị");
 
     public final String name;
 

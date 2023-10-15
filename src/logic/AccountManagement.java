@@ -10,14 +10,17 @@ import java.util.List;
 public class AccountManagement {
     private static AccountManagement accountManagement;
     private List<Account> accountList;
+    private List<Account> resetPasswordList;
     public static final String ACCOUNT_DATA_FILE = "account-list.dat";
+    public static final String RESET_PASSWORD_ACCOUNT_DATA_FILE = "reset-password-account-list.dat";
 
     private AccountManagement() {
 
     }
 
-    private AccountManagement(List<Account> accountList) {
+    private AccountManagement(List<Account> accountList, List<Account> resetPasswordList) {
         this.accountList = new ArrayList<>(accountList);
+        this.resetPasswordList = new ArrayList<>(resetPasswordList);
     }
 
     public static AccountManagement getInstance() {
@@ -28,9 +31,9 @@ public class AccountManagement {
         return accountManagement;
     }
 
-    public static AccountManagement getInstance(List<Account> accountList) {
+    public static AccountManagement getInstance(List<Account> accountList, List<Account> resetPasswordList) {
         if (accountManagement == null) {
-            accountManagement = new AccountManagement(accountList);
+            accountManagement = new AccountManagement(accountList, resetPasswordList);
         }
 
         return accountManagement;
@@ -66,11 +69,15 @@ public class AccountManagement {
         FileUtility.getInstance().writeDataToFile(accountList, ACCOUNT_DATA_FILE);
     }
 
-    public void unlockAccount(List<Account> accountList) {
+    public void saveResetPasswordAccountListToFile() {
+        FileUtility.getInstance().writeDataToFile(resetPasswordList, RESET_PASSWORD_ACCOUNT_DATA_FILE);
+    }
+
+    public void unlockAccount() {
         System.out.print("Nhập tên tài khoản: ");
         String username = ScannerUtility.inputValidString();
 
-        Account account = checkExistAccount(accountList, username);
+        Account account = checkExistAccount(username);
 
         if (account != null) {
             account.setLocked(false);
@@ -79,24 +86,26 @@ public class AccountManagement {
         }
     }
 
-    public void resetPassword(List<Account> accountList) {
+    public void resetPassword() {
         System.out.print("Nhập tên tài khoản: ");
         String username = ScannerUtility.inputValidString();
 
-        Account account = checkExistAccount(accountList, username);
+        Account account = checkExistAccount(username);
 
         if (account != null) {
-            System.out.print("Nhập mật khẩu: ");
             String password;
             String repeatPassword;
             do {
+                System.out.print("Nhập mật khẩu: ");
                 password = ScannerUtility.inputValidString();
+
+                System.out.print("Nhập mật khẩu xác nhận: ");
                 repeatPassword = ScannerUtility.inputValidString();
 
                 if (password.equals(repeatPassword)) {
                     break;
                 }
-                System.out.println("mật khẩu xác nhân phải giống mật khẩu đã nhập");
+                System.out.println("Mật khẩu xác nhân phải giống mật khẩu đã nhập");
             } while (true);
 
             account.setPassword(password);
@@ -106,16 +115,46 @@ public class AccountManagement {
         }
     }
 
-    public void displayLockedAccounts(List<Account> accountList) {
-        for (Account account : accountList) {
+    public void changePassword(Account account) {
+        String password;
+        String repeatPassword;
+        do {
+            System.out.print("Nhập mật khẩu: ");
+            password = ScannerUtility.inputValidString();
+
+            System.out.print("Nhập mật khẩu xác nhận: ");
+            repeatPassword = ScannerUtility.inputValidString();
+
+            if (password.equals(repeatPassword)) {
+                break;
+            }
+            System.out.println("Mật khẩu xác nhân phải giống mật khẩu đã nhập");
+        } while (true);
+
+        account.setPassword(password);
+    }
+
+    public void requestToResetPassword(Account account) {
+        this.resetPasswordList.add(account);
+        saveResetPasswordAccountListToFile();
+    }
+
+    public void displayResetPasswordList() {
+        for (Account account : this.resetPasswordList) {
+            account.displayAccountInfo();
+        }
+    }
+
+    public void displayLockedAccounts() {
+        for (Account account : this.accountList) {
             if (account.isLocked()) {
                 account.displayAccountInfo();
             }
         }
     }
 
-    private Account checkExistAccount(List<Account> accountList, String username) {
-        for (Account account : accountList) {
+    private Account checkExistAccount(String username) {
+        for (Account account : this.accountList) {
             if (account.getUserName().equals(username)) {
                 return account;
             }

@@ -50,10 +50,11 @@ public class AdminLogic {
 
     public void printAdminMenuLevel2Sub3() {
         System.out.println("------ QUẢN LÝ THÔNG TIN CÁC PHÒNG BAN ------");
-        System.out.println("1. Hiển thị thông tin phòng ban");
-        System.out.println("2. Hiển thị số lượng nhân viên mỗi phòng ban");
-        System.out.println("3. Quay lại màn hình chính");
-        System.out.println("4. Đăng xuất");
-        System.out.println("5. Thoát hệ thống");
+        System.out.println("1. Thêm phòng ban");
+        System.out.println("2. Hiển thị thông tin phòng ban");
+        System.out.println("3. Hiển thị số lượng nhân viên mỗi phòng ban");
+        System.out.println("4. Quay lại màn hình chính");
+        System.out.println("5. Đăng xuất");
+        System.out.println("6. Thoát hệ thống");
     }
 }

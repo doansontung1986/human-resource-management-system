@@ -1,6 +1,8 @@
 package entity;
 
+import logic.DepartmentManagement;
 import statics.DepartmentType;
+import statics.Gender;
 import statics.Role;
 import utility.ScannerUtility;
 
@@ -14,7 +16,8 @@ public abstract class Person implements Inputable, Displayable, Serializable {
     protected String phoneNumber;
     protected String citizenIdentifyId;
     protected Account account;
-    protected DepartmentType departmentType;
+    protected Department department;
+    protected Gender gender;
 
     public Person() {
         this.account = new Account();
@@ -64,12 +67,20 @@ public abstract class Person implements Inputable, Displayable, Serializable {
         this.account = account;
     }
 
-    public DepartmentType getDepartment() {
-        return departmentType;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setDepartment(DepartmentType departmentType) {
-        this.departmentType = departmentType;
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     @Override
@@ -85,33 +96,58 @@ public abstract class Person implements Inputable, Displayable, Serializable {
 
         this.account.inputInfo();
 
-        if (account.getRole().equals(Role.ADMIN)) {
-            this.departmentType = DepartmentType.INFORMATION_TECHNOLOGY;
-        } else if (account.getRole().equals(Role.HRAGENT)) {
-            this.departmentType = DepartmentType.HR;
-        } else {
-            System.out.println("Nhập phòng ban với lựa chọn sau:");
-            System.out.println("1. Công nghệ thông tin");
-            System.out.println("2. Kế toán");
-            System.out.println("3. Khối sản xuất");
-            System.out.println("4. Phòng kinh doanh");
-            System.out.println("5. Phòng marketing");
-            System.out.println("6. Phòng hậu cần");
-            System.out.println("7. Phòng hành chính");
+        if (!DepartmentManagement.getInstance().getDepartmentList().isEmpty()) {
+            if (account.getRole().equals(Role.ADMIN)) {
+                this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.INFORMATION_TECHNOLOGY);
+            } else if (account.getRole().equals(Role.HRAGENT)) {
+                this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.HR);
+            } else {
+                System.out.println("Nhập phòng ban với lựa chọn sau:");
+                System.out.println("1. Công nghệ thông tin");
+                System.out.println("2. Kế toán");
+                System.out.println("3. Khối sản xuất");
+                System.out.println("4. Phòng kinh doanh");
+                System.out.println("5. Phòng marketing");
+                System.out.println("6. Phòng hậu cần");
+                System.out.println("7. Phòng hành chính");
+                System.out.println("8. Phòng nguồn nhân lực dự bị");
 
-            int departmentChoice = ScannerUtility.inputValidNumberInRange(1, 7);
+                int departmentChoice = ScannerUtility.inputValidNumberInRange(1, 8);
 
-            switch (departmentChoice) {
-                case 1 -> this.departmentType = DepartmentType.INFORMATION_TECHNOLOGY;
-                case 2 -> this.departmentType = DepartmentType.ACCOUNTING;
-                case 3 -> this.departmentType = DepartmentType.OPERATION;
-                case 4 -> this.departmentType = DepartmentType.SALE;
-                case 5 -> this.departmentType = DepartmentType.MARKETING;
-                case 6 -> this.departmentType = DepartmentType.SUPPORT;
-                case 7 -> this.departmentType = DepartmentType.HR;
-                default ->
-                        throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
+                switch (departmentChoice) {
+                    case 1 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.INFORMATION_TECHNOLOGY);
+                    case 2 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.ACCOUNTING);
+                    case 3 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.OPERATION);
+                    case 4 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.SALE);
+                    case 5 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.MARKETING);
+                    case 6 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.SUPPORT);
+                    case 7 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.HR);
+                    case 8 ->
+                            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.STAFF);
+                }
             }
+        } else {
+            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.STAFF);
+        }
+
+        System.out.println("Chọn giới tính:");
+        System.out.println("1. Nam");
+        System.out.println("2. Nữ");
+        System.out.println("3. Khác");
+
+        int genderChoice = ScannerUtility.inputValidNumberInRange(1, 3);
+
+        switch (genderChoice) {
+            case 1 -> this.setGender(Gender.MALE);
+            case 2 -> this.setGender(Gender.FEMALE);
+            case 3 -> this.setGender(Gender.OTHER);
         }
     }
 

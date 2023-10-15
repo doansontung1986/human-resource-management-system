@@ -20,8 +20,9 @@ public class HRAgentLogic {
         System.out.println("3. Quản lý thời gian làm việc");
         System.out.println("4. Quản lý nghỉ phép");
         System.out.println("5. Quản lý lương");
-        System.out.println("6. Đăng xuất");
-        System.out.println("7. Thoát hệ thống");
+        System.out.println("6. Yêu cầu cài đặt lại mật khẩu");
+        System.out.println("7. Đăng xuất");
+        System.out.println("8. Thoát hệ thống");
     }
 
     public void printHRAgentMenuLevel2Sub1() {

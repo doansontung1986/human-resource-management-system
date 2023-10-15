@@ -2,6 +2,7 @@ package logic;
 
 import entity.Department;
 import entity.Person;
+import statics.DepartmentType;
 import utility.FileUtility;
 import utility.ScannerUtility;
 
@@ -21,6 +22,7 @@ public class DepartmentManagement {
 
     public DepartmentManagement(List<Department> departmentList) {
         this.departmentList = new ArrayList<>(departmentList);
+        addDefaultDepartments();
     }
 
     public static DepartmentManagement getInstance() {
@@ -41,6 +43,10 @@ public class DepartmentManagement {
 
     public void setDepartmentList(Set<Department> departmentList) {
         this.departmentList = new ArrayList<>(departmentList);
+    }
+
+    public List<Department> getDepartmentList() {
+        return departmentList;
     }
 
     public void saveDepartment(Department department) {
@@ -111,5 +117,44 @@ public class DepartmentManagement {
         }
 
         return null;
+    }
+
+    public Department checkExistDepartment(DepartmentType departmentType) {
+        for (Department department : this.departmentList) {
+            if (department.getDepartmentType().equals(departmentType)) {
+                return department;
+            }
+        }
+
+        return null;
+    }
+
+    private void addDefaultDepartments() {
+        Department ITDepartment = new Department();
+        ITDepartment.inputInfo(1);
+
+        Department HRDepartment = new Department();
+        HRDepartment.inputInfo(7);
+
+        Department staffDepartment = new Department();
+        staffDepartment.inputInfo(8);
+
+        if (checkExistDepartment(ITDepartment) != null) {
+            System.out.println("Phòng ban IT đã tồn tại");
+        } else {
+            saveDepartment(ITDepartment);
+        }
+
+        if (checkExistDepartment(HRDepartment) != null) {
+            System.out.println("Phòng ban HR đã tồn tại");
+        } else {
+            saveDepartment(HRDepartment);
+        }
+
+        if (checkExistDepartment(staffDepartment) != null) {
+            System.out.println("Phòng ban nguồn nhân lực dự bị đã tồn tại");
+        } else {
+            saveDepartment(staffDepartment);
+        }
     }
 }

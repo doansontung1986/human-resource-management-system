@@ -177,15 +177,15 @@ public class UserManagement {
         return null;
     }
 
-    public void updateUserInfo(List<Person> userList) {
-        if (userList.isEmpty()) {
+    public void updateUserInfo() {
+        if (this.userList.isEmpty()) {
             System.out.println("Danh sách nhân viên rỗng");
             return;
         }
 
         System.out.println("Nhập mã nhân viên");
         int userId = ScannerUtility.inputValidInteger();
-        Person user = checkExistUser(userList, userId);
+        Person user = checkExistUser(this.userList, userId);
 
         if (user != null) {
             user.inputInfo();
@@ -194,25 +194,43 @@ public class UserManagement {
         }
     }
 
-    public void viewUserDetails(List<Person> userList) {
-        if (userList.isEmpty()) {
+    public void updateUserInfo(Person user) {
+        if (this.userList.isEmpty()) {
+            System.out.println("Danh sách nhân viên rỗng");
+            return;
+        }
+
+        user.inputInfo();
+    }
+
+    public void viewUserDetails() {
+        if (this.userList.isEmpty()) {
             System.out.println("Danh sách nhân viên rỗng");
             return;
         }
 
         System.out.println("Nhập mã nhân viên");
         int personId = ScannerUtility.inputValidInteger();
-        Person person = checkExistUser(userList, personId);
+        Person user = checkExistUser(this.userList, personId);
 
-        if (person != null) {
-            person.displayInfo();
+        if (user != null) {
+            user.displayInfo();
         } else {
             System.out.println("User không tồn tại");
         }
     }
 
-    public void displayUserByDepartment(List<Person> userList) {
-        if (userList.isEmpty()) {
+    public void viewUserDetails(Person user) {
+        if (this.userList.isEmpty()) {
+            System.out.println("Danh sách nhân viên rỗng");
+            return;
+        }
+
+        user.displayInfo();
+    }
+
+    public void displayUserByDepartment() {
+        if (this.userList.isEmpty()) {
             System.out.println("Danh sách nhân viên rỗng");
             return;
         }
@@ -241,67 +259,52 @@ public class UserManagement {
             default -> throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
         }
 
-        for (Person person : userList) {
+        for (Person person : this.userList) {
             if (person.getDepartment().equals(departmentType)) {
                 person.displayInfo();
             }
         }
     }
 
-    public void displayUserByName(List<Person> userList) {
-        if (userList.isEmpty()) {
+    public void displayUserByName() {
+        if (this.userList.isEmpty()) {
             System.out.println("Danh sách nhân viên rỗng");
             return;
         }
 
         System.out.println("Nhập tên nhân viên");
         String name = ScannerUtility.inputValidString();
-        for (Person person : userList) {
+        for (Person person : this.userList) {
             if (person.getName().equals(name)) {
                 person.displayInfo();
             }
         }
     }
 
-    public void displayUserById(List<Person> userList) {
-        if (userList.isEmpty()) {
+    public void displayUserByPhone() {
+        if (this.userList.isEmpty()) {
             System.out.println("Danh sách nhân viên rỗng");
             return;
         }
 
         System.out.println("Nhập số điện thoại nhân viên cần tìm:");
         String phone = ScannerUtility.inputValidPhoneNumber();
-        for (Person person : userList) {
+        for (Person person : this.userList) {
             if (person.getPhoneNumber().equals(phone)) {
                 person.displayInfo();
             }
         }
     }
 
-    public void displayUserByPhone(List<Person> userList) {
-        if (userList.isEmpty()) {
-            System.out.println("Danh sách nhân viên rỗng");
-            return;
-        }
-
-        System.out.println("Nhập số điện thoại nhân viên cần tìm:");
-        String phone = ScannerUtility.inputValidPhoneNumber();
-        for (Person person : userList) {
-            if (person.getPhoneNumber().equals(phone)) {
-                person.displayInfo();
-            }
-        }
-    }
-
-    public void displayUserByIdentityId(List<Person> userList) {
-        if (userList.isEmpty()) {
+    public void displayUserByIdentityId() {
+        if (this.userList.isEmpty()) {
             System.out.println("Danh sách nhân viên rỗng");
             return;
         }
 
         System.out.println("Nhập số chứng minh nhân dân:");
         String identityId = ScannerUtility.inputValidIdentityId();
-        for (Person person : userList) {
+        for (Person person : this.userList) {
             if (person.getCitizenIdentifyId().equals(identityId)) {
                 person.displayInfo();
             }
