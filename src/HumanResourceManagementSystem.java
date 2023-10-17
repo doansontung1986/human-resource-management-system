@@ -6,7 +6,5 @@ public class HumanResourceManagementSystem {
         MenuManagement menuManagement = new MenuManagement();
         menuManagement.initializeData();
         menuManagement.run();
-
-
     }
 }

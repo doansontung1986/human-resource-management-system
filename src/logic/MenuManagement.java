@@ -8,7 +8,6 @@ import utility.PrintMessageUtility;
 import utility.ScannerUtility;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -20,6 +19,10 @@ public class MenuManagement {
     private TimeOffManagement timeOffManagement;
 
     public void initializeData() {
+        Object departmentDataFromFile = FileUtility.getInstance().readDataFromFile(DepartmentManagement.DEPARTMENT_DATA_FILE);
+        List<Department> departmentList = DataUtil.isNullOrEmpty(departmentDataFromFile) ? new ArrayList<>() : (List<Department>) departmentDataFromFile;
+        this.departmentManagement = DepartmentManagement.getInstance(departmentList);
+
         Object accountDataFromFile = FileUtility.getInstance().readDataFromFile(AccountManagement.ACCOUNT_DATA_FILE);
         List<Account> accountList = DataUtil.isNullOrEmpty(accountDataFromFile) ? new ArrayList<>() : (List<Account>) accountDataFromFile;
 
@@ -27,10 +30,6 @@ public class MenuManagement {
         List<Account> resetPasswordAccountList = DataUtil.isNullOrEmpty(resetPasswordAccountDataFromFile) ? new ArrayList<>() : (List<Account>) resetPasswordAccountDataFromFile;
 
         this.accountManagement = AccountManagement.getInstance(accountList, resetPasswordAccountList);
-
-        Object departmentDataFromFile = FileUtility.getInstance().readDataFromFile(DepartmentManagement.DEPARTMENT_DATA_FILE);
-        List<Department> departmentList = DataUtil.isNullOrEmpty(departmentDataFromFile) ? new ArrayList<>() : (List<Department>) departmentDataFromFile;
-        this.departmentManagement = DepartmentManagement.getInstance(departmentList);
 
         Object userDataFromFile = FileUtility.getInstance().readDataFromFile(UserManagement.USER_DATA_FILE);
         List<Person> userList = DataUtil.isNullOrEmpty(userDataFromFile) ? new ArrayList<>() : (List<Person>) userDataFromFile;
@@ -46,13 +45,22 @@ public class MenuManagement {
 
         this.timeOffManagement = TimeOffManagement.getInstance(timeOffList, timeOffDetailList);
 
+        if (AccountManagement.getInstance().getAccountList().isEmpty()) {
+            Person user = UserManagement.getInstance().addDefaultAdminUser();
+            UserManagement.getInstance().getUserList().add(user);
+            AccountManagement.getInstance().saveAccount(user.getAccount());
+            UserManagement.getInstance().saveUserListToFile();
+        }
+
+
+        this.departmentManagement.addDefaultDepartments();
     }
 
     public void run() {
         boolean isLoginExited = true;
         do {
             printLoginMenu();
-            int choice = handleMenuChoice(1, 3);
+            int choice = handleMenuChoice(1, 2);
             switch (choice) {
                 case 1:
                     boolean backToLoginScreen = true;
@@ -489,9 +497,6 @@ public class MenuManagement {
                     }
                     break;
                 case 2:
-                    System.out.println(accountManagement.getAccountList().get(0).getUserName() + "-" + accountManagement.getAccountList().get(0).getPassword());
-                    break;
-                case 3:
                     isLoginExited = false;
                     break;
                 default:
@@ -551,32 +556,7 @@ public class MenuManagement {
     private void printLoginMenu() {
         System.out.println("------ HỆ THỐNG QUẢN LÝ NGUỒN NHÂN LỰC ------");
         System.out.println("1. Đăng nhập vào hệ thống");
-        System.out.println("2. Yêu cầu đổi mật khẩu");
-        System.out.println("3. Thoát hệ thống");
-    }
-
-    private void printHRAgentMenu() {
-        System.out.println("------ HỆ THỐNG QUẢN LÝ NGUỒN NHÂN LỰC ------");
-        System.out.println("1. Quản lý tài khoản hệ thống");
-        System.out.println("2. Quản lý thông tin cá nhân nhân viên");
-        System.out.println("3. Quản lý thông tin các phòng ban");
-        System.out.println("4. Quản lý thời gian làm việc");
-        System.out.println("5. Quản lý nghỉ phép");
-        System.out.println("6. Quản lý lương");
-        System.out.println("7. Đăng xuất");
-        System.out.println("8. Thoát hệ thống");
-    }
-
-    private void printStaffMenu() {
-        System.out.println("------ HỆ THỐNG QUẢN LÝ NGUỒN NHÂN LỰC ------");
-        System.out.println("1. Quản lý tài khoản hệ thống");
-        System.out.println("2. Quản lý thông tin cá nhân nhân viên");
-        System.out.println("3. Quản lý thông tin các phòng ban");
-        System.out.println("4. Quản lý thời gian làm việc");
-        System.out.println("5. Quản lý nghỉ phép");
-        System.out.println("6. Quản lý lương");
-        System.out.println("7. Đăng xuất");
-        System.out.println("8. Thoát hệ thống");
+        System.out.println("2. Thoát hệ thống");
     }
 
     private int handleMenuChoice(int begin, int end) {

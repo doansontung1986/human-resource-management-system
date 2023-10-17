@@ -96,13 +96,13 @@ public class ScannerUtility {
     public static String inputValidAddress() {
         String address;
         do {
-            address = ScannerUtility.inputStringInRange(6, 35);
+            address = ScannerUtility.inputStringInRange(6, 60);
 
             if (ValidateUserInput.checkValidAddress(address)) {
                 break;
             }
 
-            System.out.print("Địa chỉ phải có độ dài 6 - 35 ký tự. Nhập lại địa chỉ: ");
+            System.out.print("Địa chỉ phải có độ dài 6 - 60 ký tự. Nhập lại địa chỉ: ");
         } while (true);
 
         return address;
@@ -128,17 +128,17 @@ public class ScannerUtility {
     }
 
     public static String inputValidIdentityId() {
-        long identityId;
+        String identityId;
         do {
-            identityId = ScannerUtility.inputValidLongNumber();
+            identityId = ScannerUtility.inputValidString();
 
-            if (ValidateUserInput.checkValidIdentityId(String.valueOf(identityId))) {
+            if (ValidateUserInput.checkValidIdentityId(identityId)) {
                 break;
             }
 
             System.out.println("Căn cước công dân hoặc CMND phải có độ dài 9 hoặc 12 ký tự. Vui lòng nhập lại: ");
         } while (true);
 
-        return String.valueOf(identityId);
+        return identityId;
     }
 }

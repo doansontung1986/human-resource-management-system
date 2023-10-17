@@ -140,12 +140,17 @@ public class AccountManagement {
     }
 
     public void displayResetPasswordList() {
+        if (this.resetPasswordList.isEmpty()) {
+            System.out.println("Danh sách tài khoản yêu cầu đổi mật khẩu rỗng");
+            return;
+        }
         for (Account account : this.resetPasswordList) {
             account.displayAccountInfo();
         }
     }
 
     public void displayLockedAccounts() {
+        System.out.printf("%-21s | %-16s | %-16s |\n", "Tên tài khoản", "Chức năng", "Tình trạng");
         for (Account account : this.accountList) {
             if (account.isLocked()) {
                 account.displayAccountInfo();

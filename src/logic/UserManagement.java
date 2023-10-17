@@ -20,13 +20,6 @@ public class UserManagement {
 
     private UserManagement(List<Person> userList) {
         this.userList = new ArrayList<>(userList);
-
-        if (AccountManagement.getInstance().getAccountList().isEmpty()) {
-            Person user = addDefaultAdminUser();
-            this.userList.add(user);
-            AccountManagement.getInstance().saveAccount(user.getAccount());
-            saveUserListToFile();
-        }
     }
 
     public static UserManagement getInstance() {
@@ -47,7 +40,7 @@ public class UserManagement {
         return userList;
     }
 
-    private Person addDefaultAdminUser() {
+    public Person addDefaultAdminUser() {
         Account account = new Account();
         account.setUserName("admin123");
         account.setPassword("111111");
@@ -56,6 +49,10 @@ public class UserManagement {
         defaultAdmin.setName("Default Administrator");
         defaultAdmin.setAccount(account);
         defaultAdmin.getAccount().setRole(Role.ADMIN);
+        defaultAdmin.setDepartment(DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.INFORMATION_TECHNOLOGY));
+        defaultAdmin.setAddress("Không có");
+        defaultAdmin.setPhoneNumber("Không có");
+        defaultAdmin.setCitizenIdentifyId("");
 
         return defaultAdmin;
     }
@@ -118,7 +115,7 @@ public class UserManagement {
             return;
         }
 
-        System.out.printf("%-12s | %-21s | %-36s | %-36s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
         for (Person user : userList) {
             user.displayInfo();
         }
@@ -188,6 +185,8 @@ public class UserManagement {
         Person user = checkExistUser(this.userList, userId);
 
         if (user != null) {
+            user.setCitizenIdentifyId("");
+            user.setPhoneNumber("");
             user.inputInfo();
         } else {
             System.out.println("User không tồn tại");
@@ -214,6 +213,7 @@ public class UserManagement {
         Person user = checkExistUser(this.userList, personId);
 
         if (user != null) {
+            System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
             user.displayInfo();
         } else {
             System.out.println("User không tồn tại");
@@ -226,6 +226,7 @@ public class UserManagement {
             return;
         }
 
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
         user.displayInfo();
     }
 
@@ -259,8 +260,9 @@ public class UserManagement {
             default -> throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
         }
 
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
         for (Person person : this.userList) {
-            if (person.getDepartment().equals(departmentType)) {
+            if (person.getDepartment().getDepartmentType().equals(departmentType)) {
                 person.displayInfo();
             }
         }
@@ -274,6 +276,8 @@ public class UserManagement {
 
         System.out.println("Nhập tên nhân viên");
         String name = ScannerUtility.inputValidString();
+
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
         for (Person person : this.userList) {
             if (person.getName().equals(name)) {
                 person.displayInfo();
@@ -289,6 +293,8 @@ public class UserManagement {
 
         System.out.println("Nhập số điện thoại nhân viên cần tìm:");
         String phone = ScannerUtility.inputValidPhoneNumber();
+
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
         for (Person person : this.userList) {
             if (person.getPhoneNumber().equals(phone)) {
                 person.displayInfo();
@@ -304,10 +310,30 @@ public class UserManagement {
 
         System.out.println("Nhập số chứng minh nhân dân:");
         String identityId = ScannerUtility.inputValidIdentityId();
+
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
         for (Person person : this.userList) {
             if (person.getCitizenIdentifyId().equals(identityId)) {
                 person.displayInfo();
             }
         }
+    }
+
+    public boolean checkExistPhoneNumber(String phoneNumber) {
+        for (Person person : userList) {
+            if (person.getPhoneNumber().equals(phoneNumber)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkExistCitizenId(String citizenId) {
+        for (Person person : userList) {
+            if (person.getCitizenIdentifyId().equals(citizenId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

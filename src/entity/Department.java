@@ -1,5 +1,7 @@
 package entity;
 
+import logic.DepartmentManagement;
+import logic.UserManagement;
 import statics.DepartmentType;
 import utility.ScannerUtility;
 
@@ -7,11 +9,19 @@ import java.io.Serializable;
 
 public class Department implements Inputable, Displayable, Serializable {
     private static final long serialVersionUID = -6500665823330706018L;
-    public static int AUTO_ID;
+    public static int AUTO_ID = 100;
     private int id;
     private DepartmentType departmentType;
 
     public Department() {
+        int size = DepartmentManagement.getInstance().getDepartmentList().size();
+
+        if (size == 0) {
+            AUTO_ID = 100;
+        } else {
+            AUTO_ID = UserManagement.getInstance().getUserList().get(size - 1).getId() + 1;
+        }
+
         this.id = AUTO_ID;
         AUTO_ID++;
     }

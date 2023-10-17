@@ -1,6 +1,7 @@
 package entity;
 
 import logic.DepartmentManagement;
+import logic.UserManagement;
 import statics.DepartmentType;
 import statics.Gender;
 import statics.Role;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 
 public abstract class Person implements Inputable, Displayable, Serializable {
     private static final long serialVersionUID = -6500665823330706018L;
+    private static int AUTO_ID;
     protected int id;
     protected String name;
     protected String address;
@@ -21,6 +23,15 @@ public abstract class Person implements Inputable, Displayable, Serializable {
 
     public Person() {
         this.account = new Account();
+        int size = UserManagement.getInstance().getUserList().size();
+
+        if (size == 0) {
+            AUTO_ID = 1000;
+        } else {
+            AUTO_ID = UserManagement.getInstance().getUserList().get(size - 1).getId() + 1;
+        }
+
+        this.id = AUTO_ID;
     }
 
     public int getId() {
@@ -88,20 +99,36 @@ public abstract class Person implements Inputable, Displayable, Serializable {
         System.out.println("Nhập họ tên: ");
         this.setName(ScannerUtility.inputValidName());
         System.out.println("Nhập số căn cước công dân hoặc số chứng minh nhân dân: ");
-        this.setCitizenIdentifyId(ScannerUtility.inputValidIdentityId());
+        do {
+            String citizenId = ScannerUtility.inputValidIdentityId();
+            if (!UserManagement.getInstance().checkExistCitizenId(citizenId)) {
+                this.setCitizenIdentifyId(citizenId);
+                break;
+            }
+            System.out.println("Số căn cước công dân hoặc số chứng minh nhân dân này đã tồn tại trong hệ thống");
+        } while (true);
+
         System.out.println("Nhập số điện thoại: ");
-        this.setPhoneNumber(ScannerUtility.inputValidPhoneNumber());
+        do {
+            String phoneNumber = ScannerUtility.inputValidPhoneNumber();
+            if (!UserManagement.getInstance().checkExistPhoneNumber(phoneNumber)) {
+                this.setPhoneNumber(phoneNumber);
+                break;
+            }
+            System.out.println("Số điện thoại này đã tồn tại trong hệ thống");
+        } while (true);
+
         System.out.println("Nhập địa chỉ: ");
         this.setAddress(ScannerUtility.inputValidAddress());
 
         this.account.inputInfo();
 
-        if (!DepartmentManagement.getInstance().getDepartmentList().isEmpty()) {
-            if (account.getRole().equals(Role.ADMIN)) {
-                this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.INFORMATION_TECHNOLOGY);
-            } else if (account.getRole().equals(Role.HRAGENT)) {
-                this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.HR);
-            } else {
+        if (account.getRole().equals(Role.ADMIN)) {
+            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.INFORMATION_TECHNOLOGY);
+        } else if (account.getRole().equals(Role.HRAGENT)) {
+            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.HR);
+        } else {
+            do {
                 System.out.println("Nhập phòng ban với lựa chọn sau:");
                 System.out.println("1. Công nghệ thông tin");
                 System.out.println("2. Kế toán");
@@ -132,9 +159,22 @@ public abstract class Person implements Inputable, Displayable, Serializable {
                     case 8 ->
                             this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.STAFF);
                 }
-            }
-        } else {
-            this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.STAFF);
+
+                if (this.department == null) {
+                    System.out.println("Phòng ban không tồn tại.");
+                    System.out.print("bạn có muốn tiếp tục không ? (Y/N): ");
+                    String continueToInput = ScannerUtility.inputValidString();
+                    if (continueToInput.equalsIgnoreCase("n")) {
+                        System.out.println("Bạn tạm thời được đưa vào phòng ban dự bị");
+                        this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.STAFF);
+                        break;
+                    } else {
+                        System.out.println("Vui lòng chọn lại phòng ban.");
+                    }
+                } else {
+                    break;
+                }
+            } while (true);
         }
 
         System.out.println("Chọn giới tính:");
@@ -153,6 +193,6 @@ public abstract class Person implements Inputable, Displayable, Serializable {
 
     @Override
     public void displayInfo() {
-        System.out.printf("%-12s | %-21s | %-36s | %-36s | %-16s |\n", this.id, this.account.getUserName(), this.name, this.address, this.phoneNumber);
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", this.id, this.account.getUserName(), this.name, this.address, this.phoneNumber);
     }
 }
