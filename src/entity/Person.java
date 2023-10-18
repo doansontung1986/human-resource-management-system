@@ -98,8 +98,8 @@ public abstract class Person implements Inputable, Displayable, Serializable {
     public void inputInfo() {
         System.out.println("Nhập họ tên: ");
         this.setName(ScannerUtility.inputValidName());
-        System.out.println("Nhập số căn cước công dân hoặc số chứng minh nhân dân: ");
         do {
+            System.out.println("Nhập số căn cước công dân hoặc số chứng minh nhân dân: ");
             String citizenId = ScannerUtility.inputValidIdentityId();
             if (!UserManagement.getInstance().checkExistCitizenId(citizenId)) {
                 this.setCitizenIdentifyId(citizenId);
@@ -108,8 +108,8 @@ public abstract class Person implements Inputable, Displayable, Serializable {
             System.out.println("Số căn cước công dân hoặc số chứng minh nhân dân này đã tồn tại trong hệ thống");
         } while (true);
 
-        System.out.println("Nhập số điện thoại: ");
         do {
+            System.out.println("Nhập số điện thoại: ");
             String phoneNumber = ScannerUtility.inputValidPhoneNumber();
             if (!UserManagement.getInstance().checkExistPhoneNumber(phoneNumber)) {
                 this.setPhoneNumber(phoneNumber);
@@ -121,7 +121,9 @@ public abstract class Person implements Inputable, Displayable, Serializable {
         System.out.println("Nhập địa chỉ: ");
         this.setAddress(ScannerUtility.inputValidAddress());
 
-        this.account.inputInfo();
+        if (this.account.getUserName() == null) {
+            this.account.inputInfo();
+        }
 
         if (account.getRole().equals(Role.ADMIN)) {
             this.department = DepartmentManagement.getInstance().checkExistDepartment(DepartmentType.INFORMATION_TECHNOLOGY);
@@ -193,6 +195,6 @@ public abstract class Person implements Inputable, Displayable, Serializable {
 
     @Override
     public void displayInfo() {
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", this.id, this.account.getUserName(), this.name, this.address, this.phoneNumber);
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", this.id, this.account.getUserName(), this.name, this.address, this.phoneNumber, this.department.getDepartmentType());
     }
 }

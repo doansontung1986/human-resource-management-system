@@ -3,6 +3,7 @@ package logic;
 import entity.Person;
 import entity.TimeOff;
 import entity.TimeOffDetail;
+import entity.Writable;
 import statics.Gender;
 import utility.FileUtility;
 import utility.ScannerUtility;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TimeOffManagement {
+public class TimeOffManagement implements Writable {
     private static TimeOffManagement timeOffManagement;
     private List<TimeOff> timeOffList;
     private List<TimeOffDetail> totalTimeOffDetailList;
@@ -63,6 +64,8 @@ public class TimeOffManagement {
     }
 
     public void submitLeaveDay(Person person) {
+        System.out.println("1. Nghỉ phép");
+        System.out.println("2. Nghỉ thai sản");
         System.out.println("Nhập loại nghỉ phép: ");
         int type = ScannerUtility.inputValidNumberInRange(1, 2);
 
@@ -76,6 +79,7 @@ public class TimeOffManagement {
             case 1 -> {
                 System.out.println("Nhập số ngày nghỉ phép năm (tối đa 12 ngày)");
                 TimeOffDetail timeOffDetail = inputAnnualLeaveDays(type, 12);
+                timeOff.getTimeOffDetailList().add(timeOffDetail);
                 saveTimeOff(timeOff);
                 saveTotalTimeDetail(timeOffDetail);
             }
@@ -176,7 +180,6 @@ public class TimeOffManagement {
             return;
         }
 
-        System.out.printf("%-12s | %-36s | %-12s | %-16s | %-16s |\n", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày phép năm", "Ngày phép thai sản");
         for (TimeOff timeOff : this.timeOffList) {
             timeOff.displayInfo();
         }
@@ -198,20 +201,18 @@ public class TimeOffManagement {
 
     public void saveTimeOff(TimeOff timeOff) {
         this.timeOffList.add(timeOff);
-        saveTimeOffListToFile();
+        writeData();
     }
 
     public void saveTotalTimeDetail(TimeOffDetail timeOffDetail) {
         this.totalTimeOffDetailList.add(timeOffDetail);
-        saveTotalTimeOffDetailListToFile();
+        writeData();
     }
 
-    public void saveTimeOffListToFile() {
+    @Override
+    public void writeData() {
         FileUtility.getInstance().writeDataToFile(this.timeOffList, TIME_OFF_DATA_FILE);
-    }
-
-    public void saveTotalTimeOffDetailListToFile() {
-        FileUtility.getInstance().writeDataToFile(this.timeOffList, TOTAL_TIME_OFF_DETAIL_DATA_FILE);
+        FileUtility.getInstance().writeDataToFile(this.totalTimeOffDetailList, TOTAL_TIME_OFF_DETAIL_DATA_FILE);
     }
 
     private TimeOff checkExistTimeOff(Person person) {

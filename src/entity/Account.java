@@ -1,5 +1,6 @@
 package entity;
 
+import logic.AccountManagement;
 import statics.Role;
 import utility.ScannerUtility;
 import utility.ValidateUserInput;
@@ -73,24 +74,40 @@ public class Account implements Inputable, Serializable {
 
     @Override
     public void inputInfo() {
-        System.out.println("Nhập tài khoản có độ dài 6 - 20 ký tự (chữ hoa, chữ thường, chữ số): ");
-        this.setUserName(inputValidUserName());
-        System.out.println("Nhập mật khẩu có độ dài 6 - 15 ký tự (chữ hoa, chữ thường, chữ số hoặc ký tự đặc biệt): ");
-        this.setPassword(inputValidPassword());
-        System.out.println("Xác nhận mật khẩu: ");
-        String repeatPassword;
         do {
-            repeatPassword = inputValidPassword();
-            if (repeatPassword.equals(this.password)) {
+            System.out.println("Nhập tài khoản có độ dài 6 - 20 ký tự (chữ hoa, chữ thường, chữ số): ");
+            String userName = inputValidUserName();
+            Account account = AccountManagement.getInstance().checkExistAccount(userName);
+            if (account == null) {
+                this.setUserName(inputValidUserName());
                 break;
             }
-            System.out.println("mật khẩu xác nhân phải giống mật khẩu đã nhập");
+            System.out.println("Tài khoản này đã tồn tại. Vui lòng nhập lại.");
         } while (true);
-        this.setRepeatPassword(repeatPassword);
+
+        System.out.println("Nhập mật khẩu có độ dài 6 - 15 ký tự (chữ hoa, chữ thường, chữ số hoặc ký tự đặc biệt): ");
+        this.setPassword(inputValidPassword());
+
+        do {
+            System.out.println("Xác nhận mật khẩu: ");
+            String repeatPassword = inputValidPassword();
+            if (repeatPassword.equals(this.password)) {
+                this.setRepeatPassword(repeatPassword);
+                break;
+            }
+            System.out.println("Mật khẩu xác nhân phải giống mật khẩu đã nhập");
+        } while (true);
     }
 
     public void displayAccountInfo() {
-        System.out.printf("%-21s | %-16s | %-16s |\n", this.userName, this.role, this.isLocked);
+        String status;
+        if (this.isLocked) {
+            status = "Đã khóa";
+        } else {
+            status = "Hoạt động";
+        }
+
+        System.out.printf("%-21s | %-16s | %-16s |\n", this.userName, this.role, status);
     }
 
     private String inputValidUserName() {

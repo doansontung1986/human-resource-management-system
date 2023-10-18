@@ -1,13 +1,14 @@
 package logic;
 
 import entity.Account;
+import entity.Writable;
 import utility.FileUtility;
 import utility.ScannerUtility;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountManagement {
+public class AccountManagement implements Writable {
     private static AccountManagement accountManagement;
     private List<Account> accountList;
     private List<Account> resetPasswordList;
@@ -52,24 +53,12 @@ public class AccountManagement {
 
     public void saveAccount(Account account) {
         accountList.add(account);
-        saveAccountListToFile();
+        writeData();
     }
 
-    public boolean checkAccountExist(String userName) {
-        for (Account account : accountList) {
-            if (account.getUserName().equals(userName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void saveAccountListToFile() {
+    @Override
+    public void writeData() {
         FileUtility.getInstance().writeDataToFile(accountList, ACCOUNT_DATA_FILE);
-    }
-
-    public void saveResetPasswordAccountListToFile() {
         FileUtility.getInstance().writeDataToFile(resetPasswordList, RESET_PASSWORD_ACCOUNT_DATA_FILE);
     }
 
@@ -136,7 +125,7 @@ public class AccountManagement {
 
     public void requestToResetPassword(Account account) {
         this.resetPasswordList.add(account);
-        saveResetPasswordAccountListToFile();
+        writeData();
     }
 
     public void displayResetPasswordList() {
@@ -144,6 +133,8 @@ public class AccountManagement {
             System.out.println("Danh sách tài khoản yêu cầu đổi mật khẩu rỗng");
             return;
         }
+
+        System.out.printf("%-21s | %-16s | %-16s |\n", "Tên tài khoản", "Chức năng", "Tình trạng");
         for (Account account : this.resetPasswordList) {
             account.displayAccountInfo();
         }
@@ -158,9 +149,9 @@ public class AccountManagement {
         }
     }
 
-    private Account checkExistAccount(String username) {
+    public Account checkExistAccount(String userName) {
         for (Account account : this.accountList) {
-            if (account.getUserName().equals(username)) {
+            if (account.getUserName().equals(userName)) {
                 return account;
             }
         }

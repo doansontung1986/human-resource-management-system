@@ -19,11 +19,10 @@ public class Department implements Inputable, Displayable, Serializable {
         if (size == 0) {
             AUTO_ID = 100;
         } else {
-            AUTO_ID = UserManagement.getInstance().getUserList().get(size - 1).getId() + 1;
+            AUTO_ID = DepartmentManagement.getInstance().getDepartmentList().get(size - 1).getId() + 1;
         }
 
         this.id = AUTO_ID;
-        AUTO_ID++;
     }
 
     public int getId() {

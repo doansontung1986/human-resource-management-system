@@ -27,9 +27,11 @@ public class AuthenticateManagement {
 
         if (account != null) {
             if (account.isLocked()) {
-                System.out.println("Tài koản " + account.getUserName() + " đã bị khóa");
+                System.out.println("Tài khoản " + account.getUserName() + " đã bị khóa");
+                return null;
             } else {
                 System.out.println("Đăng nhập thành công.");
+                account.setFailedLoginAttempt(0);
                 return account;
             }
         }
@@ -44,7 +46,7 @@ public class AuthenticateManagement {
         String username = ScannerUtility.inputValidString();
         System.out.print("Nhập mật khẩu: ");
         String password = ScannerUtility.inputValidString();
-        if (accountManagement.checkAccountExist(username)) {
+        if (accountManagement.checkExistAccount(username) != null) {
             for (Account account : accountList) {
                 if (account.getUserName().equals(username) && account.getPassword().equals(password)) {
                     return account;
@@ -55,6 +57,7 @@ public class AuthenticateManagement {
                         account.setLocked(true);
                         System.out.println("Tài khoản " + account.getUserName() + " đã bị khóa vì đăng nhập sai 5 lần");
                         account.setFailedLoginAttempt(0);
+                        AccountManagement.getInstance().writeData();
                         return null;
                     }
                 }
@@ -62,6 +65,4 @@ public class AuthenticateManagement {
         }
         return null;
     }
-
-
 }

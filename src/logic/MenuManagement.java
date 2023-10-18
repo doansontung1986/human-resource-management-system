@@ -17,6 +17,8 @@ public class MenuManagement {
     private AuthenticateManagement authenticateManagement;
     private DepartmentManagement departmentManagement;
     private TimeOffManagement timeOffManagement;
+    private WorkDayManagement workDayManagement;
+    private SalaryManagement salaryManagement;
 
     public void initializeData() {
         Object departmentDataFromFile = FileUtility.getInstance().readDataFromFile(DepartmentManagement.DEPARTMENT_DATA_FILE);
@@ -28,13 +30,11 @@ public class MenuManagement {
 
         Object resetPasswordAccountDataFromFile = FileUtility.getInstance().readDataFromFile(AccountManagement.RESET_PASSWORD_ACCOUNT_DATA_FILE);
         List<Account> resetPasswordAccountList = DataUtil.isNullOrEmpty(resetPasswordAccountDataFromFile) ? new ArrayList<>() : (List<Account>) resetPasswordAccountDataFromFile;
-
         this.accountManagement = AccountManagement.getInstance(accountList, resetPasswordAccountList);
 
         Object userDataFromFile = FileUtility.getInstance().readDataFromFile(UserManagement.USER_DATA_FILE);
         List<Person> userList = DataUtil.isNullOrEmpty(userDataFromFile) ? new ArrayList<>() : (List<Person>) userDataFromFile;
         this.userManagement = UserManagement.getInstance(userList);
-
         this.authenticateManagement = AuthenticateManagement.getInstance(this.accountManagement);
 
         Object timeOffDataFromFile = FileUtility.getInstance().readDataFromFile(TimeOffManagement.TIME_OFF_DATA_FILE);
@@ -42,18 +42,24 @@ public class MenuManagement {
 
         Object timeDetailDataFromFile = FileUtility.getInstance().readDataFromFile(TimeOffManagement.TOTAL_TIME_OFF_DETAIL_DATA_FILE);
         List<TimeOffDetail> timeOffDetailList = DataUtil.isNullOrEmpty(timeDetailDataFromFile) ? new ArrayList<>() : (List<TimeOffDetail>) timeDetailDataFromFile;
-
         this.timeOffManagement = TimeOffManagement.getInstance(timeOffList, timeOffDetailList);
+
+        Object workDayDataFromFile = FileUtility.getInstance().readDataFromFile(WorkDayManagement.WORKDAY_DATA_FILE);
+        List<WorkDay> workDayList = DataUtil.isNullOrEmpty(workDayDataFromFile) ? new ArrayList<>() : (List<WorkDay>) workDayDataFromFile;
+        this.workDayManagement = WorkDayManagement.getInstance(workDayList);
+
+        Object salaryDataFromFile = FileUtility.getInstance().readDataFromFile(SalaryManagement.SALARY_DATA_FILE);
+        List<Salary> salaryList = DataUtil.isNullOrEmpty(salaryDataFromFile) ? new ArrayList<>() : (List<Salary>) salaryDataFromFile;
+        this.salaryManagement = SalaryManagement.getInstance(salaryList);
+
+        this.departmentManagement.addDefaultDepartments();
 
         if (AccountManagement.getInstance().getAccountList().isEmpty()) {
             Person user = UserManagement.getInstance().addDefaultAdminUser();
             UserManagement.getInstance().getUserList().add(user);
             AccountManagement.getInstance().saveAccount(user.getAccount());
-            UserManagement.getInstance().saveUserListToFile();
+            UserManagement.getInstance().writeData();
         }
-
-
-        this.departmentManagement.addDefaultDepartments();
     }
 
     public void run() {
@@ -275,14 +281,14 @@ public class MenuManagement {
                                                 choice = handleMenuChoice(1, 6);
                                                 switch (choice) {
                                                     case 1:
-                                                        SalaryManagement.getInstance().displayWorkingDays();
+                                                        WorkDayManagement.getInstance().displayWorkingDays();
                                                         break;
                                                     case 2:
-                                                        SalaryManagement.getInstance().filterByWorkingDays();
+                                                        WorkDayManagement.getInstance().filterByWorkingDays();
                                                         break;
                                                     case 3:
-                                                        List<Salary> salaryList = new ArrayList<>(SalaryManagement.getInstance().getSalaryList());
-                                                        salaryList.sort((o1, o2) -> o2.getWorkingDays() - o1.getWorkingDays());
+                                                        List<WorkDay> workDayList = WorkDayManagement.getInstance().sortByWorkingDaysInDecrease();
+                                                        WorkDayManagement.getInstance().displayWorkingDays(workDayList);
                                                         break;
                                                     case 4:
                                                         backToPreviousScreen = false;
@@ -371,7 +377,7 @@ public class MenuManagement {
                             case STAFF:
                                 do {
                                     StaffLogic.getInstance().printStaffMenuLevel1();
-                                    choice = handleMenuChoice(1, 7);
+                                    choice = handleMenuChoice(1, 8);
                                     switch (choice) {
                                         case 1:
                                             do {
@@ -458,10 +464,10 @@ public class MenuManagement {
                                                 choice = handleMenuChoice(1, 5);
                                                 switch (choice) {
                                                     case 1:
-                                                        SalaryManagement.getInstance().inputWorkingDays(user);
+                                                        WorkDayManagement.getInstance().inputWorkingDays(user);
                                                         break;
                                                     case 2:
-                                                        SalaryManagement.getInstance().displayWorkingDays(user);
+                                                        WorkDayManagement.getInstance().displayWorkingDays(user);
                                                         break;
                                                     case 3:
                                                         backToPreviousScreen = false;
@@ -479,12 +485,37 @@ public class MenuManagement {
                                             } while (backToPreviousScreen);
                                             break;
                                         case 5:
-                                            AccountManagement.getInstance().requestToResetPassword(account);
+                                            do {
+                                                backToPreviousScreen = true;
+                                                StaffLogic.getInstance().printStaffMenuLevel2Sub5();
+                                                choice = handleMenuChoice(1, 4);
+                                                switch (choice) {
+                                                    case 1:
+                                                        SalaryManagement.getInstance().calculateSalary(user);
+                                                        SalaryManagement.getInstance().displaySalaryList(user);
+                                                        break;
+                                                    case 2:
+                                                        backToPreviousScreen = false;
+                                                        break;
+                                                    case 3:
+                                                        backToPreviousScreen = false;
+                                                        backToLoginScreen = false;
+                                                        break;
+                                                    case 4:
+                                                        backToPreviousScreen = false;
+                                                        backToLoginScreen = false;
+                                                        isLoginExited = false;
+                                                        break;
+                                                }
+                                            } while (backToPreviousScreen);
                                             break;
                                         case 6:
-                                            backToLoginScreen = false;
+                                            AccountManagement.getInstance().requestToResetPassword(account);
                                             break;
                                         case 7:
+                                            backToLoginScreen = false;
+                                            break;
+                                        case 8:
                                             backToLoginScreen = false;
                                             isLoginExited = false;
                                             break;
@@ -506,8 +537,12 @@ public class MenuManagement {
 
         } while (isLoginExited);
 
-        AccountManagement.getInstance().saveAccountListToFile();
-        UserManagement.getInstance().saveUserListToFile();
+        AccountManagement.getInstance().writeData();
+        UserManagement.getInstance().writeData();
+        DepartmentManagement.getInstance().writeData();
+        TimeOffManagement.getInstance().writeData();
+        WorkDayManagement.getInstance().writeData();
+        SalaryManagement.getInstance().writeData();
 
         System.out.println("Hẹn gặp lại");
     }

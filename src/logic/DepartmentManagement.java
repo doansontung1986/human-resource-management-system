@@ -2,6 +2,7 @@ package logic;
 
 import entity.Department;
 import entity.Person;
+import entity.Writable;
 import statics.DepartmentType;
 import utility.FileUtility;
 import utility.ScannerUtility;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class DepartmentManagement {
+public class DepartmentManagement implements Writable {
     private static DepartmentManagement departmentManagement;
     private List<Department> departmentList;
 
@@ -50,10 +51,11 @@ public class DepartmentManagement {
 
     public void saveDepartment(Department department) {
         this.departmentList.add(department);
-        saveDepartmentListToFile();
+        writeData();
     }
 
-    public void saveDepartmentListToFile() {
+    @Override
+    public void writeData() {
         FileUtility.getInstance().writeDataToFile(this.departmentList, DEPARTMENT_DATA_FILE);
     }
 
@@ -99,7 +101,7 @@ public class DepartmentManagement {
         for (Department department : this.departmentList) {
             count = 0;
             for (Person person : userList) {
-                if (department.getDepartmentType().equals(person.getDepartment())) {
+                if (department.getDepartmentType().equals(person.getDepartment().getDepartmentType())) {
                     count++;
                 }
             }
@@ -132,18 +134,17 @@ public class DepartmentManagement {
         if (getDepartmentList().isEmpty()) {
             Department ITDepartment = new Department();
             ITDepartment.inputInfo(1);
+            saveDepartment(ITDepartment);
 
             Department HRDepartment = new Department();
             HRDepartment.inputInfo(7);
+            saveDepartment(HRDepartment);
 
             Department staffDepartment = new Department();
             staffDepartment.inputInfo(8);
-
-            saveDepartment(ITDepartment);
-            saveDepartment(HRDepartment);
             saveDepartment(staffDepartment);
 
-            saveDepartmentListToFile();
+            writeData();
         }
     }
 }

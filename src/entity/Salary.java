@@ -1,12 +1,14 @@
 package entity;
 
 import logic.TimeOffManagement;
+import logic.WorkDayManagement;
 import statics.Gender;
-import utility.ScannerUtility;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Salary implements Displayable {
+public class Salary implements Displayable, Serializable {
+    private static final long serialVersionUID = -6500665823330706018L;
     private Person person;
     private static final double SALARY_RATIO_IT = 5.5;
     private static final double SALARY_RATIO_ACCOUNTING = 3.0;
@@ -16,9 +18,11 @@ public class Salary implements Displayable {
     private static final double SALARY_RATIO_SUPPORT = 2.0;
     private static final double SALARY_RATIO_HR = 2.5;
     private static final double SALARY_RATIO_STAFF = 1.0;
-    private static final int MAX_WORKING_DAYS = 22;
-    private int workingDays;
     private double salary;
+
+    public Salary(Person person) {
+        this.person = person;
+    }
 
     public Person getPerson() {
         return person;
@@ -26,14 +30,6 @@ public class Salary implements Displayable {
 
     public void setPerson(Person person) {
         this.person = person;
-    }
-
-    public int getWorkingDays() {
-        return workingDays;
-    }
-
-    public void setWorkingDays(int workingDays) {
-        this.workingDays = workingDays;
     }
 
     public double getSalary() {
@@ -44,27 +40,7 @@ public class Salary implements Displayable {
         this.salary = salary;
     }
 
-    public void inputWorkingDays() {
-        System.out.print("Nhập số ngày công: ");
-        int workingDays;
-        do {
-            workingDays = ScannerUtility.inputValidNumberInRange(1, 22);
-            if (workingDays <= MAX_WORKING_DAYS - this.workingDays) {
-                break;
-            }
-            System.out.println("Bạn không thể nhập thêm số ngày công quá số ngày còn lại: " + (MAX_WORKING_DAYS - this.workingDays));
-            System.out.print("bạn có muốn tiếp tục không ? (Y/N)");
-            String continueToInput = ScannerUtility.inputValidString();
-            if (continueToInput.equalsIgnoreCase("N")) {
-                workingDays = 0;
-                break;
-            }
-        } while (true);
-
-        this.workingDays += workingDays;
-    }
-
-    public void calculateSalary() {
+    public double calculateSalary() {
         int totalLeaveDays = sumOfLeaveDays();
         double salaryRatio = 0;
 
@@ -79,8 +55,15 @@ public class Salary implements Displayable {
             case STAFF -> salaryRatio = SALARY_RATIO_STAFF;
         }
 
-        this.salary = (this.workingDays + totalLeaveDays) * salaryRatio * 1000000;
+        WorkDay workDay = WorkDayManagement.getInstance().checkExistWorkday(person);
 
+        if (workDay != null) {
+            this.salary = (workDay.getWorkingDays() + totalLeaveDays) * salaryRatio * 1000000;
+        } else {
+            System.out.println("Không có dữ liệu ngày công");
+            return 0;
+        }
+        return this.salary;
     }
 
     private int sumOfLeaveDays() {
@@ -104,10 +87,6 @@ public class Salary implements Displayable {
 
     @Override
     public void displayInfo() {
-        System.out.printf("%-16s | %-24s | %-12s | %-12s | %-24s |\n", person.getId(), person.getName(), this.workingDays, this.sumOfLeaveDays(), this.salary);
-    }
-
-    public void displayWorkingDays() {
-        System.out.printf("%-16s | %-24s | %-12s |\n", person.getId(), person.getName(), this.workingDays);
+        System.out.printf("%-16s | %-24s | %.2f |\n", person.getId(), person.getName(), calculateSalary());
     }
 }

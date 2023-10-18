@@ -9,7 +9,7 @@ import utility.ScannerUtility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserManagement {
+public class UserManagement implements Writable {
     private static UserManagement userManagement;
     private List<Person> userList;
     public static final String USER_DATA_FILE = "user-list.dat";
@@ -99,7 +99,7 @@ public class UserManagement {
                 newUser.setCitizenIdentifyId(ScannerUtility.inputValidIdentityId());
             }
 
-            while (AccountManagement.getInstance().checkAccountExist(newUser.getAccount().getUserName())) {
+            while (AccountManagement.getInstance().checkExistAccount(newUser.getAccount().getUserName()) != null) {
                 System.out.println("Nhập lại thông tin tài khoản và mật khẩu.");
                 newUser.getAccount().inputInfo();
             }
@@ -115,7 +115,7 @@ public class UserManagement {
             return;
         }
 
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
         for (Person user : userList) {
             user.displayInfo();
         }
@@ -123,7 +123,7 @@ public class UserManagement {
 
     private void saveUserToList(Person user) {
         userList.add(user);
-        saveUserListToFile();
+        writeData();
     }
 
     public boolean checkExistIdentifyId(Person person) {
@@ -155,8 +155,10 @@ public class UserManagement {
         return null;
     }
 
-    public void saveUserListToFile() {
+    @Override
+    public void writeData() {
         FileUtility.getInstance().writeDataToFile(userList, USER_DATA_FILE);
+
     }
 
     private Person checkExistUser(List<Person> userList, int userId) {
@@ -213,7 +215,7 @@ public class UserManagement {
         Person user = checkExistUser(this.userList, personId);
 
         if (user != null) {
-            System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+            System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
             user.displayInfo();
         } else {
             System.out.println("User không tồn tại");
@@ -226,7 +228,7 @@ public class UserManagement {
             return;
         }
 
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
         user.displayInfo();
     }
 
@@ -244,6 +246,7 @@ public class UserManagement {
         System.out.println("5. Phòng marketing");
         System.out.println("6. Phòng hậu cần");
         System.out.println("7. Phòng hành chính");
+        System.out.println("8. Phòng nguồn nhân lực dự bị");
 
         int departmentChoice = ScannerUtility.inputValidNumberInRange(1, 7);
 
@@ -257,10 +260,11 @@ public class UserManagement {
             case 5 -> departmentType = DepartmentType.MARKETING;
             case 6 -> departmentType = DepartmentType.SUPPORT;
             case 7 -> departmentType = DepartmentType.HR;
+            case 8 -> departmentType = DepartmentType.STAFF;
             default -> throw new IllegalStateException("Không có phòng ban " + departmentChoice + " trong hệ thống");
         }
 
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
         for (Person person : this.userList) {
             if (person.getDepartment().getDepartmentType().equals(departmentType)) {
                 person.displayInfo();
@@ -277,9 +281,9 @@ public class UserManagement {
         System.out.println("Nhập tên nhân viên");
         String name = ScannerUtility.inputValidString();
 
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
         for (Person person : this.userList) {
-            if (person.getName().equals(name)) {
+            if (person.getName().toLowerCase().contains(name.toLowerCase())) {
                 person.displayInfo();
             }
         }
@@ -294,7 +298,7 @@ public class UserManagement {
         System.out.println("Nhập số điện thoại nhân viên cần tìm:");
         String phone = ScannerUtility.inputValidPhoneNumber();
 
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
         for (Person person : this.userList) {
             if (person.getPhoneNumber().equals(phone)) {
                 person.displayInfo();
@@ -311,7 +315,7 @@ public class UserManagement {
         System.out.println("Nhập số chứng minh nhân dân:");
         String identityId = ScannerUtility.inputValidIdentityId();
 
-        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại");
+        System.out.printf("%-12s | %-16s | %-36s | %-60s | %-16s | %-24s |\n", "Mã nhân viên", "Tên tài khoản", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Phòng ban");
         for (Person person : this.userList) {
             if (person.getCitizenIdentifyId().equals(identityId)) {
                 person.displayInfo();

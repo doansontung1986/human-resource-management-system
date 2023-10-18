@@ -18,10 +18,11 @@ public class StaffLogic {
         System.out.println("1. Thông tin tài khoản");
         System.out.println("2. Thông tin cá nhân");
         System.out.println("3. Thông tin ngày phép");
-        System.out.println("4. Thông tin lương");
-        System.out.println("5. Yêu cầu cài đặt lại mật khẩu");
-        System.out.println("6. Đăng xuất");
-        System.out.println("7. Thoát hệ thống");
+        System.out.println("4. Thông tin ngày công");
+        System.out.println("5. Thông tin lương");
+        System.out.println("6. Yêu cầu cài đặt lại mật khẩu");
+        System.out.println("7. Đăng xuất");
+        System.out.println("8. Thoát hệ thống");
     }
 
     public void printStaffMenuLevel2Sub1() {
@@ -51,11 +52,19 @@ public class StaffLogic {
     }
 
     public void printStaffMenuLevel2Sub4() {
-        System.out.println("------ THÔNG TIN LƯƠNG ------");
+        System.out.println("------ THÔNG TIN NGÀY CÔNG ------");
         System.out.println("1. Nhập số ngày công");
-        System.out.println("2. Hiển thị bảng lương nhân viên");
+        System.out.println("2. Hiển thị số ngày công");
         System.out.println("3. Quay lại màn hình chính");
         System.out.println("4. Đăng xuất");
         System.out.println("5. Thoát hệ thống");
+    }
+
+    public void printStaffMenuLevel2Sub5() {
+        System.out.println("------ THÔNG TIN LƯƠNG ------");
+        System.out.println("1. Hiển thị bảng lương nhân viên");
+        System.out.println("2. Quay lại màn hình chính");
+        System.out.println("3. Đăng xuất");
+        System.out.println("4. Thoát hệ thống");
     }
 }
