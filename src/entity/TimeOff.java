@@ -34,15 +34,31 @@ public class TimeOff implements Displayable, Serializable {
 
     @Override
     public void displayInfo() {
+        String status;
         System.out.println("Thông tin nghỉ phép của nhân viên " + "(" + this.person.getId() + " - " + this.person.getName() + " - Giới tính: " + this.person.getGender() + ")");
         if (person.getGender().equals(Gender.FEMALE)) {
             for (TimeOffDetail timeOffDetail : this.timeOffDetailList) {
-                System.out.printf("%-24s | %-16s | %-16s | %-16s |\n", "Ngày phép năm", timeOffDetail.getAnnualLeaveDay(), timeOffDetail.getFromDate(), timeOffDetail.getToDate());
-                System.out.printf("%-24s | %-16s | %-16s | %-16s |\n", "Ngày phép thai sản", timeOffDetail.getMaternityLeaveDay(), timeOffDetail.getFromDate(), timeOffDetail.getToDate());
+                if (timeOffDetail.isApproved()){
+                    status = "Đã duyệt";
+                } else {
+                    status = "Chưa duyệt";
+                }
+
+                if (timeOffDetail.getAnnualLeaveDay() > 0) {
+                    System.out.printf("%-12s | %-24s | %-16s | %-16s | %-16s | %-16s |\n", timeOffDetail.getId(), "Ngày phép năm", timeOffDetail.getAnnualLeaveDay(), timeOffDetail.getFromDate(), timeOffDetail.getToDate(), status);
+                } else {
+                    System.out.printf("%-12s | %-24s | %-16s | %-16s | %-16s | %-16s |\n", timeOffDetail.getId(), "Ngày phép thai sản", timeOffDetail.getMaternityLeaveDay(), timeOffDetail.getFromDate(), timeOffDetail.getToDate(), status);
+                }
             }
         } else {
             for (TimeOffDetail timeOffDetail : this.timeOffDetailList) {
-                System.out.printf("%-24s | %-16s | %-16s | %-16s |\n", "Ngày phép năm", timeOffDetail.getAnnualLeaveDay(), timeOffDetail.getFromDate(), timeOffDetail.getToDate());
+                if (timeOffDetail.isApproved()){
+                    status = "Đã duyệt";
+                } else {
+                    status = "Chưa duyệt";
+                }
+
+                System.out.printf("%-12s | %-24s | %-16s | %-16s | %-16s | %-16s |\n", timeOffDetail.getId(), "Ngày phép năm", timeOffDetail.getAnnualLeaveDay(), timeOffDetail.getFromDate(), timeOffDetail.getToDate(), status);
             }
         }
         System.out.println("-------------------------------------------");

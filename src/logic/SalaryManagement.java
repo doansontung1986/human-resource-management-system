@@ -42,13 +42,18 @@ public class SalaryManagement implements Writable {
         this.salaryList = new ArrayList<>(salaryList);
     }
 
-    public void calculateSalary(Person person) {
+    public Salary inputNewSalaryEntry(Person person) {
         Salary salary = checkExistSalary(person);
         if (salary == null) {
             salary = new Salary(person);
+            saveSalary(salary);
         }
+        return salary;
+    }
+
+    public void calculateSalary(Person person) {
+        Salary salary = inputNewSalaryEntry(person);
         salary.calculateSalary();
-        saveSalary(salary);
     }
 
     public void saveSalary(Salary salary) {

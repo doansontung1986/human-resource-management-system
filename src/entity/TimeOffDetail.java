@@ -16,14 +16,15 @@ public class TimeOffDetail implements Serializable {
     private LocalDate toDate;
 
     public TimeOffDetail(long annualLeaveDay, long maternityLeaveDay, LocalDate fromDate, LocalDate toDate) {
-        AUTO_ID = TimeOffManagement.getInstance().getTotalTimeOffDetailList().size();
+        int size = TimeOffManagement.getInstance().getTotalTimeOffDetailList().size();
 
-        if (AUTO_ID < 1000) {
+        if (size == 0) {
             AUTO_ID = 1000;
+        } else {
+            AUTO_ID = TimeOffManagement.getInstance().getTotalTimeOffDetailList().get(size - 1).getId() + 1;
         }
 
         this.id = AUTO_ID;
-        AUTO_ID++;
 
         this.annualLeaveDay = annualLeaveDay;
         this.maternityLeaveDay = maternityLeaveDay;
@@ -75,4 +76,5 @@ public class TimeOffDetail implements Serializable {
     public void setToDate(LocalDate toDate) {
         this.toDate = toDate;
     }
+
 }

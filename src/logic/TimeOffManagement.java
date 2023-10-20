@@ -73,6 +73,7 @@ public class TimeOffManagement implements Writable {
 
         if (timeOff == null) {
             timeOff = new TimeOff(person, new ArrayList<>());
+            saveTimeOff(timeOff);
         }
 
         switch (type) {
@@ -80,7 +81,6 @@ public class TimeOffManagement implements Writable {
                 System.out.println("Nhập số ngày nghỉ phép năm (tối đa 12 ngày)");
                 TimeOffDetail timeOffDetail = inputAnnualLeaveDays(type, 12);
                 timeOff.getTimeOffDetailList().add(timeOffDetail);
-                saveTimeOff(timeOff);
                 saveTotalTimeDetail(timeOffDetail);
             }
             case 2 -> {
@@ -88,7 +88,6 @@ public class TimeOffManagement implements Writable {
                     System.out.println("Nhập số ngày nghỉ phép thai sản (tối đa 5 ngày)");
                     TimeOffDetail timeOffDetail = inputAnnualLeaveDays(type, 5);
                     timeOff.getTimeOffDetailList().add(timeOffDetail);
-                    saveTimeOff(timeOff);
                     saveTotalTimeDetail(timeOffDetail);
                 } else {
                     System.out.println("Nghỉ phép thai sản chỉ dảnh cho nhân viên nữ");
@@ -229,7 +228,11 @@ public class TimeOffManagement implements Writable {
         int timeOffDetailId = ScannerUtility.inputValidInteger();
         TimeOffDetail timeOffDetail = checkExistTimeOffDetail(timeOffDetailId);
         if (timeOffDetail != null) {
-            timeOffDetail.setApproved(true);
+            if (timeOffDetail.isApproved()) {
+                System.out.println("Đơn nghỉ phép này đã được phê duyệt.");
+            } else {
+                timeOffDetail.setApproved(true);
+            }
         } else {
             System.out.println("Mã nghỉ phép không tồn tại");
         }
