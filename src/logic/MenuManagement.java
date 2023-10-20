@@ -465,6 +465,7 @@ public class MenuManagement {
                                                 switch (choice) {
                                                     case 1:
                                                         WorkDayManagement.getInstance().inputWorkingDays(user);
+                                                        SalaryManagement.getInstance().calculateSalary(user);
                                                         break;
                                                     case 2:
                                                         WorkDayManagement.getInstance().displayWorkingDays(user);
@@ -491,7 +492,6 @@ public class MenuManagement {
                                                 choice = handleMenuChoice(1, 4);
                                                 switch (choice) {
                                                     case 1:
-                                                        SalaryManagement.getInstance().calculateSalary(user);
                                                         SalaryManagement.getInstance().displaySalaryList(user);
                                                         break;
                                                     case 2:
