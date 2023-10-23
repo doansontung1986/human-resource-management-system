@@ -23,10 +23,10 @@ public class TimeOffManagement implements Writable {
     public static final String TIME_OFF_DATA_FILE = "time-off-list.dat";
     public static final String TOTAL_TIME_OFF_DETAIL_DATA_FILE = "total-time-off-detail-list.dat";
 
-    public TimeOffManagement() {
+    private TimeOffManagement() {
     }
 
-    public TimeOffManagement(List<TimeOff> timeOffList, List<TimeOffDetail> totalTimeOffDetailList) {
+    private TimeOffManagement(List<TimeOff> timeOffList, List<TimeOffDetail> totalTimeOffDetailList) {
         this.timeOffList = new ArrayList<>(timeOffList);
         this.totalTimeOffDetailList = new ArrayList<>(totalTimeOffDetailList);
     }

@@ -14,10 +14,10 @@ public class WorkDayManagement implements Writable {
     private List<WorkDay> workDayList;
     public static final String WORKDAY_DATA_FILE = "workday-list.dat";
 
-    public WorkDayManagement() {
+    private WorkDayManagement() {
     }
 
-    public WorkDayManagement(List<WorkDay> workDayList) {
+    private WorkDayManagement(List<WorkDay> workDayList) {
         this.workDayList = new ArrayList<>(workDayList);
     }
 

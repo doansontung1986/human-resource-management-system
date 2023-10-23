@@ -17,11 +17,11 @@ public class DepartmentManagement implements Writable {
 
     public static final String DEPARTMENT_DATA_FILE = "department-list.dat";
 
-    public DepartmentManagement() {
+    private DepartmentManagement() {
 
     }
 
-    public DepartmentManagement(List<Department> departmentList) {
+    private DepartmentManagement(List<Department> departmentList) {
         this.departmentList = new ArrayList<>(departmentList);
     }
 

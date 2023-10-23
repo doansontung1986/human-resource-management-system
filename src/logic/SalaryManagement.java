@@ -13,10 +13,10 @@ public class SalaryManagement implements Writable {
     public static final String SALARY_DATA_FILE = "salary-list.dat";
     private List<Salary> salaryList;
 
-    public SalaryManagement() {
+    private SalaryManagement() {
     }
 
-    public SalaryManagement(List<Salary> salaryList) {
+    private SalaryManagement(List<Salary> salaryList) {
         this.salaryList = new ArrayList<>(salaryList);
     }
 
