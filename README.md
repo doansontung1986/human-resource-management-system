@@ -34,3 +34,6 @@ Do nhu cầu quản lý nhân sự tham gia vào công ty, nghỉ việc, tính 
     - Hiển thị danh sách bảng lương nhân viên
 7. **Đăng xuất khỏi hệ thống**
 8. **Thoát chương trình**
+
+#### Note:
+Please check diagrams in **[diagrams](diagrams) folder**
