@@ -37,3 +37,7 @@ Do nhu cầu quản lý nhân sự tham gia vào công ty, nghỉ việc, tính 
 
 #### Note:
 Please check diagrams in **[diagrams](diagrams) folder**
+
+## Hướng phát triển trong tương lai
+1. Chuyển từ lưu trữ file sang lưu trữ trên cơ ở dữ liệu cục bộ
+2. Chuyển từ Console application sang web application
