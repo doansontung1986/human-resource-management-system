@@ -38,6 +38,18 @@ Do nhu cầu quản lý nhân sự tham gia vào công ty, nghỉ việc, tính 
 #### Note:
 Please check diagrams in **[diagrams](diagrams) folder**
 
-## Hướng phát triển trong tương lai
+## Hướng phát triển trong tương lai cho ứng dụng
 1. Chuyển từ lưu trữ file sang lưu trữ trên cơ ở dữ liệu cục bộ
 2. Chuyển từ Console application sang web application
+
+## Kết quả thu được từ môn Java Core
+1. Hiểu kiến thức nền tảng của Java
+   + Các khai báo biến và phân loại các loại biến trong Java
+   + Các biểu thức, toán tử, hằng số trong Java
+   + Các biểu thức điều kiện, lặp.
+   + Cấu trúc dữ liệu nền tảng: Mảng 1 chiều, mảng 2 chiều
+   + Hiểu OOP và 4 tính chất của OOP
+   + Ngoại lệ (checked exception và uncheck exception)
+   + String, StringBuilder, StringBuffer và các phương thức
+   + Java collections
+   + Hiểu và áp dụng được cách xây dựng các ứng dụng Windows Console với OOP 
