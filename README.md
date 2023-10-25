@@ -52,4 +52,4 @@ Please check diagrams in **[diagrams](diagrams) folder**
    + Ngoại lệ (checked exception và uncheck exception)
    + String, StringBuilder, StringBuffer và các phương thức
    + Java collections
-   + Hiểu và áp dụng được cách xây dựng các ứng dụng Windows Console với OOP 
+2. Hiểu và áp dụng được cách xây dựng các ứng dụng Windows Console với OOP 
