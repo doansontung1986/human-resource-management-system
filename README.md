@@ -70,7 +70,7 @@ công ty và tính toán lương nhân viên hiệu quả.
 
 ### Class diagram:
 
-![Class diagram](diagrams/class_diagram.svg)
+![Class diagram](diagrams/class_diagram.jpg)
 
 ### Sequence diagrams:
 
