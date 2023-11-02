@@ -94,7 +94,7 @@ công ty và tính toán lương nhân viên hiệu quả.
 ![Sequence diagram 3](diagrams/sequence_diagrams/user_management_flow.jpg)
 
 ## Demo link
-+ Youtube: https://youtu.be/k-isZrINTgE
++ Youtube: https://www.youtube.com/watch?v=rsedhS_BGbo
 + Application info: https://docs.google.com/document/d/1y5ZdwpHFDiRvCgTkhYVYZ5Ho0sxRhhcSLrphcRqaBQY/edit?usp=sharing
 
 ## Hướng phát triển trong tương lai cho ứng dụng
